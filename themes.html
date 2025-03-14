@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wii Central</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Frutiger+Arto&display=swap');
+        
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Frutiger Arto', sans-serif;
+            background: linear-gradient(180deg, #00AEEF 0%, #80D8FF 50%, #FFFFFF 100%);
+            background-attachment: fixed;
+            text-align: center;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+        }
+
+        h1 {
+            color: #0073e6;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 2.5em;
+        }
+
+        .category {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .category.active {
+            display: block;
+        }
+
+        .category h2 {
+            color: #0073e6;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .category ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+
+        .category ul li {
+            margin: 10px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .category ul li img {
+            max-width: 100px;
+            border-radius: 5px;
+            margin-right: 15px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .category ul li img:hover {
+            transform: scale(1.1);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 15px;
+            background: linear-gradient(135deg, #00AEEF, #0073e6);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            transition: 0.3s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #0073e6, #00AEEF);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .filters {
+            margin: 10px 0;
+        }
+
+        .filter-btn {
+            padding: 10px 15px;
+            margin: 5px;
+            background: #0073e6;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .filter-btn:hover {
+            background: #005bb5;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 10px 15px;
+            background: red;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            background: darkred;
+        }
+
+        /* Estilos para a modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 2em;
+            cursor: pointer;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="window.location.href='index.html'">Voltar</button>
+    <div class="container">
+        <h1>Wii Temas</h1>
+        <p>Download de temas!</p>
+
+        <div class="filters">
+            <button class="filter-btn" onclick="showCategory('all')">Todos</button>
+            <button class="filter-btn" onclick="showCategory('wii-menu')">Wii Menu</button>
+            <button class="filter-btn" onclick="showCategory('usb-loader')">USB Loader GX</button>
+            <button class="filter-btn" onclick="showCategory('homebrew')">Homebrew Channel</button>
+        </div>
+
+        <div class="category active" id="wii-menu">
+            <h2>Wii Menu</h2>
+            <ul>
+                <li>
+                    <img src="https://wiibrew.org/w/images/a/a4/OGdark.png" onclick="openModal('https://wiibrew.org/w/images/a/a4/OGdark.png')">
+                    Tema escuro classico para Wii Menu <a href="https://drive.google.com/file/d/1tn-sYZ6KEohqeu5nx339ZgkZu3w3LN6q/view?usp=drive_link" class="btn">Download</a>
+                </li>
+                <li>
+                    <img src="https://wiibrew.org/w/images/6/6b/Darkwhite.png" onclick="openModal('https://wiibrew.org/w/images/6/6b/Darkwhite.png')">
+                    Tema escuro e branco para Wii Menu <a href="https://drive.google.com/file/d/1lFECBriKDCXEJx4nNhepQySZFxEPhc4q/view?usp=drive_link" class="btn">Download</a>
+                </li>
+                <li>
+                    <img src="https://wiibrew.org/w/images/e/e5/Bluetheme.png" onclick="openModal('https://wiibrew.org/w/images/e/e5/Bluetheme.png')">
+                    Tema escuro e azul para Wii Menu <a href="https://drive.google.com/file/d/1kzfAVNn7E1jmfoftsjMdggMTV5wfJvS8/view?usp=drive_link" class="btn">Download</a>
+                </li>
+                <li>
+                    <img src="https://wiibrew.org/w/images/7/7a/Yellowtheme.png" onclick="openModal('https://wiibrew.org/w/images/7/7a/Yellowtheme.png')">
+                    Tema escuro e amarelo para Wii Menu <a href="https://drive.google.com/file/d/1k9t4z-Gdtf2u5LUjuyrV8ptUuLo7pv5I/view?usp=drive_link" class="btn">Download</a>
+                </li>
+                <li>
+                    <img src="https://wiibrew.org/w/images/e/e4/Pinktheme.png" onclick="openModal('https://wiibrew.org/w/images/e/e4/Pinktheme.png')">
+                    Tema escuro e rosa para Wii Menu <a href="https://drive.google.com/file/d/1vjF3pTOc0NGB8u13BiOpTLzBs4VLE2PX/view?usp=drive_link" class="btn">Download</a>
+                </li>
+                <li>
+                    <img src="https://wiibrew.org/w/images/6/6e/Purpletheme.png" onclick="openModal('https://wiibrew.org/w/images/6/6e/Purpletheme.png')">
+                    Tema escuro e roxo para Wii Menu <a href="https://drive.google.com/file/d/1rl9Lu_7mWSc3jKHPszRAjA_IEvq6Ylws/view?usp=drive_link" class="btn">Download</a>
+                </li>
+                <li>
+                    <img src="https://wiibrew.org/w/images/0/09/Orangetheme.png" onclick="openModal('https://wiibrew.org/w/images/0/09/Orangetheme.png')">
+                    Tema escuro e laranja para Wii Menu <a href="https://drive.google.com/file/d/1Tan-MTeJ0GsWmj8VsSQxAFNu1I-tbIyT/view?usp=drive_link" class="btn">Download</a>
+                </li>
+                <li>
+                    <img src="https://wiibrew.org/w/images/e/eb/Greentheme.png" onclick="openModal('https://wiibrew.org/w/images/e/eb/Greentheme.png')">
+                    Tema escuro e verde para Wii Menu <a href="https://drive.google.com/file/d/1VubP1em6aROZttOssGFjU2TrHIyvFyfh/view?usp=drive_link" class="btn">Download</a>
+                </li>
+                <li>
+                    <img src="https://wiibrew.org/w/images/e/e4/Redtheme.png" onclick="openModal('https://wiibrew.org/w/images/e/e4/Redtheme.png')">
+                    Tema escuro e vermelho para Wii Menu <a href="https://drive.google.com/file/d/1t5eSAUXTDj4jaWwvioGtqM_bIeOnMUW0/view?usp=drive_link" class="btn">Download</a>
+                </li>
+
+            </ul>
+        </div>
+
+        <div class="category" id="usb-loader">
+            <h2>USB Loader GX</h2>
+            <ul>
+                <li>
+                    <img src="https://gbatemp.net/attachments/accuratewiimenu-png.481946/" onclick="openModal('https://gbatemp.net/attachments/accuratewiimenu-png.481946/')">
+                    Tema preciso do Wii Menu para USB Loader GX <a href="https://drive.google.com/file/d/12ZBUgqRcqWalwv3CjaF3gjHIJ71qKfQD/view?usp=drive_link" class="btn">Download</a>
+                </li>
+                <li>
+                    <img src="https://gbatemp.net/attachments/zincx6-png.478022/" onclick="openModal('https://gbatemp.net/attachments/zincx6-png.478022/')">
+                    Zinc UX para USB Loader GX <a href="https://drive.google.com/file/d/1MFsB5gTMfcPHpK-6-yrRtG4V3o9zQfup/view?usp=drive_link" class="btn">Download</a>
+                </li>
+                <li>
+                    <img src="https://gbatemp.net/attachments/zincx3-png.477518/" onclick="openModal('https://gbatemp.net/attachments/zincx3-png.477518/')">
+                    Zinc UX Ícones preto e branco para USB Loader GX <a href="https://drive.google.com/file/d/1JQbLRYrLWWB-k401IfwuyqhRNHgyyJog/view?usp=drive_link" class="btn">Download</a>
+                </li>
+                <li>
+                    <img src="https://gbatemp.net/attachments/zincx5-png.478001/" onclick="openModal('https://gbatemp.net/attachments/zincx5-png.478001/')">
+                    Zinc UX Ícones coloridos para USB Loader GX <a href="https://drive.google.com/file/d/13GxOb0krWkzP759_GmE0ybRdEU4SuYDN/view?usp=drive_link" class="btn">Download</a>
+                </li>
+                <li>
+                    <img src="https://gbatemp.net/attachments/zincx2-png.478008/" onclick="openModal('https://gbatemp.net/attachments/zincx2-png.478008/')">
+                    Zinc UX Ícones circulares para USB Loader GX <a href="https://drive.google.com/file/d/16huTWGk7KS_NVUSRcrVLcsZVAfLXpx2X/view?usp=drive_link" class="btn">Download</a>
+                </li>
+                <li>
+                    <img src="https://gbatemp.net/attachments/zincx2-png.479129/" onclick="openModal('https://gbatemp.net/attachments/zincx2-png.479129/')">
+                    Zinc UX Ícones delineados para USB Loader GX <a href="https://drive.google.com/file/d/14x29MHLE4ozISI5cZGGhf6Nr1TmOzqXr/view?usp=drive_link" class="btn">Download</a>
+                </li>
+                <li>
+                    <img src="https://gbatemp.net/attachments/zincx3-png.479241/" onclick="openModal('https://gbatemp.net/attachments/zincx3-png.479241/')">
+                    Zinc UX Ícones Wii para USB Loader GX <a href="https://drive.google.com/file/d/14x29MHLE4ozISI5cZGGhf6Nr1TmOzqXr/view?usp=drive_link" class="btn">Download</a>
+                </li>
+                <li>
+                    <img src="https://gbatemp.net/attachments/defaultplusdark3-png.475237/" onclick="openModal('https://gbatemp.net/attachments/defaultplusdark3-png.475237/')">
+                    Default+ Dark para USB Loader GX <a href="https://drive.google.com/file/d/18TI0ZhGdVQ2-yhrejP9sJxUnBP8tX7VL/view?usp=drive_link" class="btn">Download</a>
+                </li>
+                <li>
+                    <img src="https://gbatemp.net/attachments/defaultplus-png.467511/" onclick="openModal('https://gbatemp.net/attachments/defaultplus-png.467511/')">
+                    Default+ 1.1 para USB Loader GX <a href="https://drive.google.com/file/d/1gdvN4lSpENsVZzwubmNwWNg06CkGgvV0/view?usp=drive_link" class="btn">Download</a>
+                </li>
+                <li>
+                    <img src="https://gbatemp.net/attachments/superswitch-png.465921/" onclick="openModal('https://gbatemp.net/attachments/superswitch-png.465921/')">
+                    Super Switch Dark para USB Loader GX <a href="https://drive.google.com/file/d/1NSUSEcTP9WrnXxXEmjenKQbdrnWByeZv/view?usp=sharing" class="btn">Download</a>
+                </li>
+                <li>
+                    <img src="https://gbatemp.net/attachments/superswitchlight-png.466530/" onclick="openModal('https://gbatemp.net/attachments/superswitchlight-png.466530/')">
+                    Super Switch Light para USB Loader GX <a href="https://drive.google.com/file/d/1RiQNpH7MISp8rt-4uEng4t5mwCaVoQoE/view?usp=sharing" class="btn">Download</a>
+                </li>
+                <li>
+                    <img src="https://gbatemp.net/attachments/wiigx-png.483732/" onclick="openModal('https://gbatemp.net/attachments/wiigx-png.483732/')">
+                    Wii Menu GX Light para USB Loader GX <a href="https://drive.google.com/file/d/1yaSC3QFftpO4Ffe1Z40RDpHUqidWnFqy/view?usp=sharing" class="btn">Download</a>
+                </li>
+                <li>
+                    <img src="https://gbatemp.net/attachments/wiigxdark-png.483733/" onclick="openModal('https://gbatemp.net/attachments/wiigxdark-png.483733/')">
+                    Wii Menu GX Dark para USB Loader GX <a href="https://drive.google.com/file/d/1yMtYle4O_5UPeVNB9zqQ7_s7EP5wVPCp/view?usp=drive_link" class="btn">Download</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="category" id="homebrew">
+            <h2>Homebrew Channel</h2>
+            <ul>
+                <li>
+                    <img src="https://placehold.co/600x400" onclick="openModal('https://placehold.co/600x400')">
+                    Tema Minimalista para Homebrew Channel <a href="#" class="btn">Download</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Modal para exibir a imagem ampliada -->
+    <div class="modal" id="imageModal">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <img id="modalImage" src="" alt="Imagem ampliada">
+    </div>
+
+    <script>
+        function showCategory(category) {
+            let categories = document.querySelectorAll('.category');
+            categories.forEach(cat => {
+                if (category === 'all') {
+                    cat.classList.add('active');
+                } else {
+                    cat.classList.toggle('active', cat.id === category);
+                }
+            });
+        }
+
+        // Funções para abrir e fechar a modal
+        function openModal(imageSrc) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            modalImage.src = imageSrc;
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('imageModal');
+            modal.classList.remove('active');
+        }
+    </script>
+</body>
+</html>
